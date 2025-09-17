@@ -46,7 +46,7 @@ export default {
         // Add global methods
         app.config.globalProperties.$alert = function(options) {
             const dlg = dialogsRoot.$refs.alert;
-            dlg.zIndex = highest_zIndex() + 1;
+            // dlg.zIndex = highest_zIndex() + 1;
             dlg.title = options.title;
             dlg.message = options.message;
             dlg.buttonOk = options.buttonOk;

@@ -1,11 +1,9 @@
 {
   "name": "vue-absolute-components",
   "version": "1.0.0",
-  "type": "module",
   "description": "Vue 2.x components. Not compatible with Vue 3.",
-  "main": "dist/core.js",
+  "main": "core.js",
   "scripts": {
-    "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {
