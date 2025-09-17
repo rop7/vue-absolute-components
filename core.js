@@ -56,7 +56,7 @@ export default {
 
         app.config.globalProperties.$confirm = function(options) {
             const dlg = dialogsRoot.$refs.confirm;
-            dlg.zIndex = highest_zIndex() + 1;
+            // dlg.zIndex = highest_zIndex() + 1;
             dlg.title = options.title;
             dlg.message = options.message;
             dlg.buttonOk = options.buttonOk;
@@ -67,7 +67,7 @@ export default {
 
         app.config.globalProperties.$prompt = function(options) {
             const dlg = dialogsRoot.$refs.prompt;
-            dlg.zIndex = highest_zIndex() + 1;
+            // dlg.zIndex = highest_zIndex() + 1;
             dlg.text = "";
             dlg.title = options.title;
             dlg.message = options.message;
@@ -80,7 +80,7 @@ export default {
 
         app.config.globalProperties.$choose = function(options) {
             const dlg = dialogsRoot.$refs.choose;
-            dlg.zIndex = highest_zIndex() + 1;
+            // dlg.zIndex = highest_zIndex() + 1;
             dlg.title = options.title;
             dlg.message = options.message;
             dlg.buttons = options.buttons;
