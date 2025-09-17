@@ -1,13 +1,24 @@
 {
   "name": "vue-absolute-components",
   "version": "1.0.0",
-  "description": "",
-  "main": "core.js",
+  "type": "module",
+  "description": "Vue 2.x components. Not compatible with Vue 3.",
+  "main": "dist/core.js",
   "scripts": {
+    "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {
-      "vue": "^2.0.1"
+    "vue": "^3.3.6"
+  },
+  "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "rollup": "^3.0.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-vue": "^6.0.0"
   },
   "author": "rop",
   "license": "ISC"

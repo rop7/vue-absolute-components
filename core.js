@@ -1,139 +1,92 @@
-// Import global css styles
 import "./core.css";
 
-// Import dialog components
+import { createApp, h } from "vue";
 import alert from "./dialog-alert.vue";
 import confirm from "./dialog-confirm.vue";
 import prompt from "./dialog-prompt.vue";
 import choose from "./dialog-choose.vue";
 
 export default {
-
-    install(Vue) {
-
+    install(app) {
         // Insert dialogs EL on HTML
-        (function() {
-              const BODY = document.getElementsByTagName("body")[0],
-                    TAG = document.createElement("div"),
-                    TEMPLATE = `
-                        <div id='__vacDialogs__'>
-                            <alert ref="alert"></alert>
-                            <confirm ref="confirm"></confirm>
-                            <prompt ref="prompt"></prompt>
-                            <choose ref="choose"></choose>
-                        </div>
-                    `;
-              TAG.innerHTML = TEMPLATE;
-              BODY.appendChild(TAG);
-         })();
+        const BODY = document.body;
+        const TAG = document.createElement("div");
+        TAG.innerHTML = `<div id='__vacDialogs__'></div>`;
+        BODY.appendChild(TAG);
 
-        // Init dialogs root with all dialogs components
-        var dialogs = new Vue({
-            el: "#__vacDialogs__",
-            components: {
-                alert,
-                confirm,
-                prompt,
-                choose
+        // Create dialogs root app
+        const DialogsRoot = {
+            components: { alert, confirm, prompt, choose },
+            render() {
+                return h("div", { id: "__vacDialogs__" }, [
+                    h(alert, { ref: "alert" }),
+                    h(confirm, { ref: "confirm" }),
+                    h(prompt, { ref: "prompt" }),
+                    h(choose, { ref: "choose" }),
+                ]);
             }
-        });
+        };
 
-        // Insert global methods tor manipulating dialogs components
-        Vue.mixin({
-            methods: {
-                alert: function(options) {
-                    dialogs.$refs.alert.zIndex = highest_zIndex() + 1;
-                    dialogs.$refs.alert.title = options.title;
-                    dialogs.$refs.alert.message = options.message;
-                    dialogs.$refs.alert.buttonOk = options.buttonOk;
-                    dialogs.$refs.alert.callback = options.callback;
-                    dialogs.$refs.alert.active = true;
-                    /* $vm.alert({
-                        title: "titulo",
-                        message: "mensagem...",
-                        buttonOk: "Ok",
-                        callback: function() {
-                            console.log();
-                        }
-                    }) */
-                },
-                confirm(options) {
-                    dialogs.$refs.confirm.zIndex = highest_zIndex() + 1;
-                    dialogs.$refs.confirm.title = options.title;
-                    dialogs.$refs.confirm.message = options.message;
-                    dialogs.$refs.confirm.buttonOk = options.buttonOk;
-                    dialogs.$refs.confirm.buttonCancel = options.buttonCancel;
-                    dialogs.$refs.confirm.callback = options.callback;
-                    dialogs.$refs.confirm.active = true;
-                    /* $vm.confirm({
-                        title: "titulo",
-                        message: "mensagem...",
-                        buttonOk: "Ok",
-                        buttonCancel: "Cancelar",
-                        callback: function() {
-                            console.log();
-                        }
-                    }) */
-                },
-                prompt(options) {
-                    dialogs.$refs.prompt.zIndex = highest_zIndex() + 1;
-                    dialogs.$refs.prompt.text = "";
-                    dialogs.$refs.prompt.title = options.title;
-                    dialogs.$refs.prompt.message = options.message;
-                    dialogs.$refs.prompt.buttonOk = options.buttonOk;
-                    dialogs.$refs.prompt.buttonCancel = options.buttonCancel;
-                    dialogs.$refs.prompt.placeHolder = options.placeHolder;
-                    dialogs.$refs.prompt.callback = options.callback;
-                    dialogs.$refs.prompt.active = true;
-                    /* $vm.prompt({
-                        title: "titulo",
-                        message: "mensagem...",
-                        buttonOk: "Ok",
-                        buttonCancel: "cancelar",
-                        placeHolder: "anything...",
-                        callback: function(text) {
-                            console.log(text);
-                        }
-                    }) */
-                },
-                choose(options) {
-                    dialogs.$refs.choose.zIndex = highest_zIndex() + 1;
-                    dialogs.$refs.choose.title = options.title;
-                    dialogs.$refs.choose.message = options.message;
-                    dialogs.$refs.choose.buttons = options.buttons;
-                    dialogs.$refs.choose.buttonCancel = options.buttonCancel;
-                    dialogs.$refs.choose.callback = options.callback;
-                    dialogs.$refs.choose.active = true;
-                    /* $vm.choose({
-                        title: "titulo",
-                        message: "mensagem...",
-                        buttons: [
-                            { label: "op 1", bgColor: "hex" },
-                            { label: "op 2", bgColor: "white" },
-                        ],
-                        buttonCancel: "cancelar",
-                        callback: function(btnIndex) {
-                            console.log(btnIndex);
-                        }
-                    }) */
+        const dialogsApp = createApp(DialogsRoot);
+        const dialogsRoot = dialogsApp.mount("#__vacDialogs__");
+
+        // Helper to get highest z-index
+        function highest_zIndex() {
+            const elems = document.getElementsByTagName("*");
+            let highest = 0;
+            for (let i = 0; i < elems.length; i++) {
+                const zindex = window.getComputedStyle(elems[i]).getPropertyValue("z-index");
+                if (zindex !== "auto" && Number(zindex) > highest) {
+                    highest = Number(zindex);
                 }
             }
-        });
+            return highest;
+        }
+
+        // Add global methods
+        app.config.globalProperties.$alert = function(options) {
+            const dlg = dialogsRoot.$refs.alert;
+            dlg.zIndex = highest_zIndex() + 1;
+            dlg.title = options.title;
+            dlg.message = options.message;
+            dlg.buttonOk = options.buttonOk;
+            dlg.callback = options.callback;
+            dlg.active = true;
+        };
+
+        app.config.globalProperties.$confirm = function(options) {
+            const dlg = dialogsRoot.$refs.confirm;
+            dlg.zIndex = highest_zIndex() + 1;
+            dlg.title = options.title;
+            dlg.message = options.message;
+            dlg.buttonOk = options.buttonOk;
+            dlg.buttonCancel = options.buttonCancel;
+            dlg.callback = options.callback;
+            dlg.active = true;
+        };
+
+        app.config.globalProperties.$prompt = function(options) {
+            const dlg = dialogsRoot.$refs.prompt;
+            dlg.zIndex = highest_zIndex() + 1;
+            dlg.text = "";
+            dlg.title = options.title;
+            dlg.message = options.message;
+            dlg.buttonOk = options.buttonOk;
+            dlg.buttonCancel = options.buttonCancel;
+            dlg.placeHolder = options.placeHolder;
+            dlg.callback = options.callback;
+            dlg.active = true;
+        };
+
+        app.config.globalProperties.$choose = function(options) {
+            const dlg = dialogsRoot.$refs.choose;
+            dlg.zIndex = highest_zIndex() + 1;
+            dlg.title = options.title;
+            dlg.message = options.message;
+            dlg.buttons = options.buttons;
+            dlg.buttonCancel = options.buttonCancel;
+            dlg.callback = options.callback;
+            dlg.active = true;
+        };
     }
 };
-
-
-function highest_zIndex() {
-
-    var elems = document.getElementsByTagName("*"),
-        highest = 0;
-
-    for (var i = 0; i < elems.length; i++) {
-        var zindex=document.defaultView.getComputedStyle(elems[i],null).getPropertyValue("z-index");
-        if((zindex > highest) && (zindex != "auto")) {
-            highest = zindex;
-        }
-    }
-
-    return Number(highest);
-}
